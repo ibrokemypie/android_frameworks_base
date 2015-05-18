@@ -480,7 +480,11 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             ContentResolver resolver = mContext.getContentResolver();
             resolver.registerContentObserver(CMSettings.Global.getUriFor(
                     CMSettings.Global.DEV_FORCE_SHOW_NAVBAR), false, this, UserHandle.USER_ALL);
-
+            // SU indicator
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.SU_INDICATOR), false, this, UserHandle.USER_ALL);
+            update();
+        }
             CurrentUserTracker userTracker = new CurrentUserTracker(mContext) {
                 @Override
                 public void onUserSwitched(int newUserId) {
@@ -499,7 +503,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         private void update() {
             boolean visible = CMSettings.Global.getIntForUser(mContext.getContentResolver(),
                     CMSettings.Global.DEV_FORCE_SHOW_NAVBAR, 0, UserHandle.USER_CURRENT) == 1;
-
             if (visible) {
                 forceAddNavigationBar();
             } else {

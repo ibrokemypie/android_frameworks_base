@@ -51,6 +51,7 @@ import com.android.systemui.statusbar.policy.HotspotController;
 import com.android.systemui.statusbar.policy.RotationLockController;
 import com.android.systemui.statusbar.policy.UserInfoController;
 import com.android.systemui.statusbar.policy.SuController;
+import com.android.systemui.statusbar.policy.SuControllerImpl;
 
 import cyanogenmod.providers.CMSettings;
 
@@ -528,7 +529,10 @@ public class PhoneStatusBarPolicy implements Callback, RotationLockController.Ro
     };
 
     private void updateSu() {
-        mIconController.setIconVisibility(mSlotSu, mSuController.hasActiveSessions());
+        mIconController.setIconVisibility(mSlotSu, mSuController.hasActiveSessions()
+            && (Settings.System.getIntForUser(mContext.getContentResolver(),
+            Settings.System.SU_INDICATOR, 1,
+            UserHandle.USER_CURRENT) == SuControllerImpl.SU_INDICATOR_ICON));
     }
 
     private final CastController.Callback mCastCallback = new CastController.Callback() {
